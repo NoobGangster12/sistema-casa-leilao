@@ -1,19 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Adm
- */
-
-import java.sql.PreparedStatement;
 import java.sql.Connection;
-import javax.swing.JOptionPane;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-
+import javax.swing.JOptionPane;
 
 public class ProdutosDAO {
     
@@ -22,21 +11,25 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
-    public void cadastrarProduto (ProdutosDTO produto){
+    public int cadastrarProduto(ProdutosDTO produto) {
+        conn = new conectaDAO().connectDB(); // usa sua classe de conexão
+        int status = 0;
         
-        
-        //conn = new conectaDAO().connectDB();
-        
-        
+        try {
+            prep = conn.prepareStatement("INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)");
+            prep.setString(1, produto.getNome());
+            prep.setInt(2, produto.getValor());
+            prep.setString(3, produto.getStatus());
+            
+            status = prep.executeUpdate(); // retorna 1 se inseriu com sucesso
+            JOptionPane.showMessageDialog(null, "Produto salvo com sucesso!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage());
+        }
+        return status;
     }
     
-    public ArrayList<ProdutosDTO> listarProdutos(){
-        
+    public ArrayList<ProdutosDTO> listarProdutos() {
         return listagem;
     }
-    
-    
-    
-        
 }
-

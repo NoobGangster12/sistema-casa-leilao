@@ -41,7 +41,7 @@ public class ProdutosDAO {
         prep = conn.prepareStatement(sql);
         resultset = prep.executeQuery();
         
-        listagem.clear(); // Limpa a lista antes de preencher
+        listagem.clear(); 
         while (resultset.next()) {
             ProdutosDTO produto = new ProdutosDTO();
             produto.setId(resultset.getInt("id"));
@@ -56,4 +56,26 @@ public class ProdutosDAO {
     }
         return listagem;
     }
+    
+    public int venderProduto(int id) {
+    conn = new conectaDAO().connectDB();
+    if (conn == null) {
+        JOptionPane.showMessageDialog(null, "Falha na conexão com o banco!");
+        return 0;
+    }
+
+    int status = 0;
+    try {
+        prep = conn.prepareStatement("UPDATE produtos SET status = ? WHERE id = ?");
+        prep.setString(1, "Vendido");
+        prep.setInt(2, id);
+
+        status = prep.executeUpdate(); // retorna 1 se atualizou com sucesso
+        JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage());
+    }
+    return status;
+}
+
 }

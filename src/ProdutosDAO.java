@@ -12,16 +12,20 @@ public class ProdutosDAO {
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
     public int cadastrarProduto(ProdutosDTO produto) {
-        conn = new conectaDAO().connectDB(); // usa sua classe de conexão
-        int status = 0;
+        conn = new conectaDAO().connectDB();
+        if (conn == null) {
+            JOptionPane.showMessageDialog(null, "Falha na conexão com o banco!");
+            return 0;
+        }
         
+        int status = 0;
         try {
             prep = conn.prepareStatement("INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)");
             prep.setString(1, produto.getNome());
             prep.setInt(2, produto.getValor());
             prep.setString(3, produto.getStatus());
             
-            status = prep.executeUpdate(); // retorna 1 se inseriu com sucesso
+            status = prep.executeUpdate();
             JOptionPane.showMessageDialog(null, "Produto salvo com sucesso!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage());
